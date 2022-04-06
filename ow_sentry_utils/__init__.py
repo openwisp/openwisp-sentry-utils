@@ -25,5 +25,5 @@ def before_send(event, hint):
         return event
     error_message = event.get('logentry', {}).get('message', '')
     for error in SENTRY_IGNORE_ERRORS[event_logger]:
-        if re.match(error, error_message):
+        if re.search(error, error_message):
             return None
