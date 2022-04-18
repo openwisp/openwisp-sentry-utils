@@ -27,3 +27,4 @@ def before_send(event, hint):
     for error in SENTRY_IGNORE_ERRORS[event_logger]:
         if re.search(error, error_message):
             return None
+    return event
