@@ -1,10 +1,9 @@
 import re
 
-
 SENTRY_IGNORE_ERRORS = {
-    'celery.worker.request': [r'Worker exited prematurely: signal 15 (SIGTERM) Job:'],
+    'celery.worker.request': [r'Worker exited prematurely: signal 15 \(SIGTERM\) Job:'],
     'multiprocessing': [
-        r'Process \"ForkPoolWorker-2\" pid:([\d.]+) exited with "signal 9 \(SIGKILL\)\"'
+        r'Process \"ForkPoolWorker-([\d.]+)\" pid:([\d.]+) exited with "signal 9 \(SIGKILL\)\"'
     ],
 }
 
