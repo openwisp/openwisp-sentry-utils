@@ -1,10 +1,21 @@
 import re
 
 SENTRY_IGNORE_ERRORS = {
-    'celery.worker.request': [r'Worker exited prematurely: signal 15 \(SIGTERM\) Job:'],
-    'multiprocessing': [
-        r'Process \"ForkPoolWorker-([\d.]+)\" pid:([\d.]+) exited with "signal 9 \(SIGKILL\)\"'
+    # The celery autoscaler generates following errors while
+    # downscaling workers. The error is generated
+    # by the worker that gets terminated due to downscaling.
+    # Hence, it is safe to ignore these errors.
+    'celery.worker.request': [
+        r'Worker exited prematurely: signal 15 \(SIGTERM\) Job:',
+        r'Worker exited prematurely: signal 9 \(SIGKILL\) Job:',
     ],
+    'multiprocessing': [
+        (
+            r'Process \"ForkPoolWorker-([\d.]+)\" pid:([\d.]+)'
+            r' exited with "signal 9 \(SIGKILL\)\"'
+        )
+    ],
+    'celery.concurrency.asynpool': [r'Timed out waiting for UP message from '],
 }
 
 
