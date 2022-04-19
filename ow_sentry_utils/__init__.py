@@ -16,6 +16,10 @@ SENTRY_IGNORE_ERRORS = {
         )
     ],
     'celery.concurrency.asynpool': [r'Timed out waiting for UP message from '],
+    # Daphne throws below error when we restart the service using
+    # "supervisorctl restart all". This error gets resolved automatically,
+    # hence, we can safely ignore this.
+    'daphne.server': [r'Couldn\'t listen on any\:b\'\/opt\/openwisp2\/daphne0\.sock'],
 }
 
 
