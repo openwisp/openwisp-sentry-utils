@@ -8,11 +8,17 @@ SENTRY_IGNORE_ERRORS = {
     'celery.worker.request': [
         r'Worker exited prematurely: signal 15 \(SIGTERM\) Job:',
         r'Worker exited prematurely: signal 9 \(SIGKILL\) Job:',
+        r'Worker exited prematurely: exitcode 15 Job:',
+        r'Worker exited prematurely: exitcode 9 Job:',
     ],
     'multiprocessing': [
         (
-            r'Process \"ForkPoolWorker-([\d.]+)\" pid:([\d.]+)'
-            r' exited with "signal 9 \(SIGKILL\)\"'
+            r'Process (?:\'|\")ForkPoolWorker-([\d.]+)(?:\'|\") pid:([\d.]+)'
+            r' exited with (?:\'|\")signal 9 \(SIGKILL\)(?:\'|\")'
+        ),
+        (
+            r'Process (?:\'|\")ForkPoolWorker-([\d.]+)(?:\'|\") pid:([\d.]+)'
+            r' exited with (?:\'|\")signal 15 \(SIGTERM\)(?:\'|\")'
         )
     ],
     'celery.concurrency.asynpool': [r'Timed out waiting for UP message from '],
@@ -38,7 +44,9 @@ def before_send(event, hint):
     if event_logger not in SENTRY_IGNORE_ERRORS.keys():
         return event
     error_message = event.get('logentry', {}).get('message', '')
+    error_params = event.get('logentry', {}).get('params', [])
+    print(error_message % tuple(error_params))
     for error in SENTRY_IGNORE_ERRORS[event_logger]:
-        if re.search(error, error_message):
+        if re.search(error, error_message % tuple(error_params)):
             return None
     return event
