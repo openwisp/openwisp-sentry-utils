@@ -18,7 +18,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'sentry-sdk',
+        'sentry-sdk~=1.5.12',
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
