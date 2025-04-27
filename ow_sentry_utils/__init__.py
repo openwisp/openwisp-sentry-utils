@@ -26,6 +26,11 @@ SENTRY_IGNORE_ERRORS = {
     # "supervisorctl restart all". This error gets resolved automatically,
     # hence, we can safely ignore this.
     'daphne.server': [r'Couldn\'t listen on any\:b\'\/opt\/openwisp2\/daphne0\.sock'],
+    # Paramiko logs errors even when the exception in handled in OpenWISP.
+    # Moreover, it creates a separate Sentry event for each line in the traceback.
+    # This creates a lot of noise in Sentry. Hence, we can safely ignore this.
+    # For more info, read https://github.com/paramiko/paramiko/issues/2366
+    'paramiko.transport': [r'.*'],
 }
 
 
